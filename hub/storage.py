@@ -68,13 +68,18 @@ def update_alert_severity(db_path, alert_id, severity, summary):
             conn.close()
 
 def get_alerts(db_path):
-    conn = sqlite3.connect(db_path)
-    c = conn.cursor()
+    conn = None
     try:
+        conn = sqlite3.connect(db_path)
+        c = conn.cursor()
         c.execute("SELECT id, suc_id, timestamp, event_type, raw_masked, anomaly_score, severity, summary FROM alerts ORDER BY id DESC")
         rows = c.fetchall()
         results = []
         for r in rows:
+            # Validate row has expected number of columns
+            if len(r) < 8:
+                continue
+                
             # Safely parse JSON
             raw_masked = {}
             if r[4]:
@@ -98,5 +103,6 @@ def get_alerts(db_path):
         print(f"Error getting alerts: {e}")
         return []
     finally:
-        conn.close()
+        if conn:
+            conn.close()
 

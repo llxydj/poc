@@ -65,15 +65,25 @@ def receive_alert():
             except (ValueError, TypeError):
                 anomaly_score = None
 
+        # Safely serialize masked data
+        try:
+            raw_masked_json = json.dumps(masked)
+        except (TypeError, ValueError):
+            raw_masked_json = "{}"
+
         record = {
             "suc_id": suc_id,
             "timestamp": timestamp,
             "event_type": event_type,
-            "raw_masked": json.dumps(masked),
+            "raw_masked": raw_masked_json,
             "anomaly_score": anomaly_score
         }
 
-        alert_id = insert_alert(DB_PATH, record)
+        try:
+            alert_id = insert_alert(DB_PATH, record)
+        except Exception as db_error:
+            print(f"[HUB] Database error inserting alert: {db_error}")
+            return jsonify({"error": "database error"}), 500
 
         # run correlation (can be async/threaded in POC)
         severity, summary = correlate_and_tag(DB_PATH, alert_id)
@@ -152,7 +162,12 @@ def mask_ip(ip):
 
 def hash_username(u):
     # simple deterministic hash for demo (not secure)
-    return str(abs(hash(u)) % 1000000)
+    try:
+        if not u or not isinstance(u, str):
+            return "0"
+        return str(abs(hash(u)) % 1000000)
+    except (TypeError, AttributeError):
+        return "0"
 
 if __name__ == "__main__":
     print(f"[HUB] Starting BAYANIHUB Hub on http://0.0.0.0:5000")
