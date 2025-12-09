@@ -97,8 +97,13 @@ with st.sidebar:
     
     # Refresh controls
     st.markdown("### ⚙️ Settings")
-    auto_refresh = st.checkbox("🔄 Auto-refresh", value=True, help="Automatically refresh dashboard")
-    refresh_interval = st.slider("Refresh interval (seconds)", 1, 10, 3, help="How often to refresh data")
+    auto_refresh = st.checkbox("🔄 Auto-refresh", value=False, help="⚠️ Auto-refresh causes page reload which may interrupt navigation. Use manual refresh button for better UX.")
+    if auto_refresh:
+        st.info("💡 Tip: Use the 'Refresh Data' button below for better navigation experience")
+        refresh_interval = st.slider("Refresh interval (seconds)", 3, 30, 5, help="How often to refresh data (longer = less freezing)")
+    else:
+        refresh_interval = 5  # Default when auto-refresh is off
+        st.success("✅ Manual refresh enabled - Use 'Refresh Data' button to update")
     
     st.markdown("---")
     
@@ -435,7 +440,15 @@ with footer_col2:
 with footer_col3:
     st.caption(f"Total alerts: {st.session_state.alert_count}")
 
-# Auto-refresh logic
+# Manual refresh button (always available)
+col1, col2, col3 = st.columns([1, 1, 1])
+with col2:
+    if st.button("🔄 Refresh Data", use_container_width=True, type="primary"):
+        st.rerun()
+
+# Auto-refresh logic - Only runs if enabled (may cause page reload)
 if auto_refresh and hub_status == "online":
+    # Note: This will cause page reload, which may interrupt navigation
+    # Consider using manual refresh instead for better UX
     time.sleep(refresh_interval)
     st.rerun()
