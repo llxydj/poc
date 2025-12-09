@@ -87,7 +87,8 @@ def receive_alert():
             alert_id = insert_alert(DB_PATH, record)
         except Exception as db_error:
             print(f"[HUB] Database error inserting alert: {db_error}")
-            return jsonify({"error": "database error"}), 500
+            # Log full error, but return generic message
+            return jsonify({"error": "database error", "message": "Failed to store alert"}), 500
 
         # run correlation (can be async/threaded in POC)
         severity, summary = correlate_and_tag(DB_PATH, alert_id)
@@ -97,7 +98,9 @@ def receive_alert():
         return jsonify({"status": "received", "id": alert_id, "severity": severity, "summary": summary}), 200
     except Exception as e:
         print(f"[HUB] Error processing alert: {e}")
-        return jsonify({"error": "internal server error", "message": str(e)}), 500
+        # Don't expose internal error details in production
+        error_msg = str(e) if os.environ.get("FLASK_DEBUG", "False").lower() == "true" else "Internal server error"
+        return jsonify({"error": "internal server error", "message": error_msg}), 500
 
 @app.route("/alerts", methods=["GET"])
 def list_alerts():

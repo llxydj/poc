@@ -148,6 +148,14 @@ with st.sidebar:
 st.markdown('<h1 class="main-header">🛡️ BAYANIHUB Security Dashboard</h1>', unsafe_allow_html=True)
 st.markdown('<p class="sub-header">Real-time security alert monitoring and correlation across State Universities and Colleges</p>', unsafe_allow_html=True)
 
+# Manual refresh button at top (better UX)
+refresh_col1, refresh_col2, refresh_col3 = st.columns([2, 1, 2])
+with refresh_col2:
+    if st.button("🔄 Refresh Data Now", use_container_width=True, type="primary", key="top_refresh"):
+        st.rerun()
+
+st.markdown("---")
+
 # Fetch data
 def fetch_alerts():
     try:
@@ -215,20 +223,32 @@ with metric_col5:
 st.markdown("### 📊 Visualizations")
 viz_col1, viz_col2 = st.columns(2)
 
-if alerts:
-    df = pd.DataFrame(alerts)
-    
-    # Apply filters
-    if filter_severity:
-        df = df[df["severity"].isin(filter_severity)]
-    if filter_suc:
-        df = df[df["suc_id"].isin(filter_suc)]
-    if filter_event_type:
-        df = df[df["event_type"].isin(filter_event_type)]
+if alerts and len(alerts) > 0:
+    try:
+        df = pd.DataFrame(alerts)
+        
+        # Ensure required columns exist
+        required_cols = ["severity", "suc_id", "event_type"]
+        for col in required_cols:
+            if col not in df.columns:
+                df[col] = "unknown"
+        
+        # Apply filters
+        if filter_severity and len(filter_severity) > 0:
+            df = df[df["severity"].isin(filter_severity)]
+        if filter_suc and len(filter_suc) > 0:
+            df = df[df["suc_id"].isin(filter_suc)]
+        if filter_event_type and len(filter_event_type) > 0:
+            df = df[df["event_type"].isin(filter_event_type)]
+    except Exception as e:
+        st.error(f"Error processing alerts: {e}")
+        df = pd.DataFrame()
+else:
+    df = pd.DataFrame()
     
     # Severity distribution pie chart
     with viz_col1:
-        if "severity" in df.columns and len(df) > 0:
+        if not df.empty and "severity" in df.columns and len(df) > 0:
             severity_counts = df["severity"].value_counts()
             fig_pie = px.pie(
                 values=severity_counts.values,
@@ -247,7 +267,7 @@ if alerts:
     
     # SUC distribution bar chart
     with viz_col2:
-        if "suc_id" in df.columns and len(df) > 0:
+        if not df.empty and "suc_id" in df.columns and len(df) > 0:
             suc_counts = df["suc_id"].value_counts()
             fig_bar = px.bar(
                 x=suc_counts.index,
@@ -263,7 +283,7 @@ if alerts:
             st.info("No data to display")
     
     # Timeline chart
-    if "timestamp" in df.columns and len(df) > 0:
+    if not df.empty and "timestamp" in df.columns and len(df) > 0:
         st.markdown("### ⏱️ Alert Timeline")
         try:
             df["timestamp_parsed"] = pd.to_datetime(df["timestamp"], errors='coerce')
@@ -307,20 +327,24 @@ if alerts:
     # Search box
     search_term = st.text_input("🔍 Search alerts", placeholder="Search by SUC, event type, or summary...")
     
-    if search_term:
-        try:
-            mask = pd.Series([False] * len(df))
-            if "suc_id" in df.columns:
-                mask = mask | df["suc_id"].astype(str).str.contains(search_term, case=False, na=False)
-            if "event_type" in df.columns:
-                mask = mask | df["event_type"].astype(str).str.contains(search_term, case=False, na=False)
-            if "summary" in df.columns:
-                mask = mask | df["summary"].astype(str).str.contains(search_term, case=False, na=False)
-            df_filtered = df[mask]
-        except:
+    if not df.empty:
+        if search_term:
+            try:
+                mask = pd.Series([False] * len(df))
+                if "suc_id" in df.columns:
+                    mask = mask | df["suc_id"].astype(str).str.contains(search_term, case=False, na=False)
+                if "event_type" in df.columns:
+                    mask = mask | df["event_type"].astype(str).str.contains(search_term, case=False, na=False)
+                if "summary" in df.columns:
+                    mask = mask | df["summary"].astype(str).str.contains(search_term, case=False, na=False)
+                df_filtered = df[mask]
+            except Exception as e:
+                st.warning(f"Search error: {e}")
+                df_filtered = df
+        else:
             df_filtered = df
     else:
-        df_filtered = df
+        df_filtered = pd.DataFrame()
     
     # Prepare display dataframe
     if len(df_filtered) > 0:
@@ -440,10 +464,11 @@ with footer_col2:
 with footer_col3:
     st.caption(f"Total alerts: {st.session_state.alert_count}")
 
-# Manual refresh button (always available)
-col1, col2, col3 = st.columns([1, 1, 1])
-with col2:
-    if st.button("🔄 Refresh Data", use_container_width=True, type="primary"):
+# Bottom refresh button (duplicate for convenience)
+st.markdown("---")
+refresh_bottom_col1, refresh_bottom_col2, refresh_bottom_col3 = st.columns([2, 1, 2])
+with refresh_bottom_col2:
+    if st.button("🔄 Refresh Data", use_container_width=True, type="secondary", key="bottom_refresh"):
         st.rerun()
 
 # Auto-refresh logic - Only runs if enabled (may cause page reload)
