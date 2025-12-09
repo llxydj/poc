@@ -183,8 +183,11 @@ if alerts:
     st.session_state.alert_count = len(alerts)
     st.session_state.last_update = datetime.now()
 
-# Metrics row
+# Enhanced Metrics Section with Better Visual Design
 st.markdown("### 📈 Overview Metrics")
+st.markdown("---")
+
+# Create metric cards with better visual hierarchy
 metric_col1, metric_col2, metric_col3, metric_col4, metric_col5 = st.columns(5)
 
 if metrics:
@@ -204,23 +207,35 @@ else:
     suc_b_count = sum(1 for a in alerts if a.get("suc_id") == "SUC_B")
 
 with metric_col1:
-    st.metric("Total Alerts", total, delta=None)
+    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+    st.metric("📊 Total Alerts", total, delta=None)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 with metric_col2:
+    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
     delta_high = None
-    st.metric("🔴 High", high, delta=delta_high, delta_color="inverse")
+    st.metric("🔴 High Severity", high, delta=delta_high, delta_color="inverse")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 with metric_col3:
-    st.metric("🟡 Medium", medium, delta=None)
+    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+    st.metric("🟡 Medium Severity", medium, delta=None)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 with metric_col4:
-    st.metric("🟢 Low", low, delta=None)
+    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+    st.metric("🟢 Low Severity", low, delta=None)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 with metric_col5:
-    st.metric("Active SUCs", f"{suc_a_count + suc_b_count}", delta=None)
+    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+    active_sucs = suc_a_count + suc_b_count
+    st.metric("🏫 Active SUCs", active_sucs, delta=None)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# Visualizations row
+# Enhanced Visualizations Section
 st.markdown("### 📊 Visualizations")
+st.markdown("---")
 viz_col1, viz_col2 = st.columns(2)
 
 if alerts and len(alerts) > 0:
@@ -245,11 +260,12 @@ if alerts and len(alerts) > 0:
         df = pd.DataFrame()
 else:
     df = pd.DataFrame()
-    
-    # Severity distribution pie chart
-    with viz_col1:
-        if not df.empty and "severity" in df.columns and len(df) > 0:
-            severity_counts = df["severity"].value_counts()
+
+# Charts section (works with df regardless of how it was created)
+# Severity distribution pie chart
+with viz_col1:
+    if not df.empty and "severity" in df.columns and len(df) > 0:
+        severity_counts = df["severity"].value_counts()
             fig_pie = px.pie(
                 values=severity_counts.values,
                 names=severity_counts.index,
@@ -260,13 +276,20 @@ else:
                     "Low": "#28a745"
                 }
             )
-            fig_pie.update_layout(showlegend=True, height=350)
-            st.plotly_chart(fig_pie, use_container_width=True)
-        else:
-            st.info("No data to display")
-    
-    # SUC distribution bar chart
-    with viz_col2:
+        fig_pie.update_layout(
+            showlegend=True, 
+            height=380,
+            font=dict(size=12),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=40, b=20)
+        )
+        st.plotly_chart(fig_pie, use_container_width=True)
+    else:
+        st.info("📊 No severity data available to display")
+
+# SUC distribution bar chart
+with viz_col2:
         if not df.empty and "suc_id" in df.columns and len(df) > 0:
             suc_counts = df["suc_id"].value_counts()
             fig_bar = px.bar(
@@ -277,55 +300,78 @@ else:
                 color=suc_counts.values,
                 color_continuous_scale="Blues"
             )
-            fig_bar.update_layout(showlegend=False, height=350)
+            fig_bar.update_layout(
+                showlegend=False, 
+                height=380,
+                font=dict(size=12),
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=20, r=20, t=40, b=20)
+            )
             st.plotly_chart(fig_bar, use_container_width=True)
         else:
-            st.info("No data to display")
+            st.info("📊 No SUC data available to display")
     
-    # Timeline chart
-    if not df.empty and "timestamp" in df.columns and len(df) > 0:
-        st.markdown("### ⏱️ Alert Timeline")
-        try:
-            df["timestamp_parsed"] = pd.to_datetime(df["timestamp"], errors='coerce')
-            # Remove rows with invalid timestamps
-            df_valid = df[df["timestamp_parsed"].notna()]
+# Timeline chart
+if not df.empty and "timestamp" in df.columns and len(df) > 0:
+    st.markdown("### ⏱️ Alert Timeline")
+    try:
+        df["timestamp_parsed"] = pd.to_datetime(df["timestamp"], errors='coerce')
+        # Remove rows with invalid timestamps
+        df_valid = df[df["timestamp_parsed"].notna()]
+        
+        if len(df_valid) > 0:
+            df_timeline = df_valid.groupby([df_valid["timestamp_parsed"].dt.floor("1min"), "severity"]).size().reset_index(name="count")
+            df_timeline = df_timeline.pivot(index="timestamp_parsed", columns="severity", values="count").fillna(0)
             
-            if len(df_valid) > 0:
-                df_timeline = df_valid.groupby([df_valid["timestamp_parsed"].dt.floor("1min"), "severity"]).size().reset_index(name="count")
-                df_timeline = df_timeline.pivot(index="timestamp_parsed", columns="severity", values="count").fillna(0)
-                
-                fig_timeline = go.Figure()
-                for severity in ["High", "Medium", "Low"]:
-                    if severity in df_timeline.columns:
-                        fig_timeline.add_trace(go.Scatter(
-                            x=df_timeline.index,
-                            y=df_timeline[severity],
-                            mode='lines+markers',
-                            name=severity,
-                            line=dict(
-                                width=2,
-                                color="#dc3545" if severity == "High" else "#ffc107" if severity == "Medium" else "#28a745"
-                            )
-                        ))
-                
-                fig_timeline.update_layout(
-                    title="Alerts Over Time",
-                    xaxis_title="Time",
-                    yaxis_title="Number of Alerts",
-                    height=300,
-                    hovermode='x unified'
-                )
-                st.plotly_chart(fig_timeline, use_container_width=True)
-            else:
-                st.warning("No valid timestamps found for timeline chart")
-        except Exception as e:
-            st.warning(f"Could not generate timeline: {e}")
+            fig_timeline = go.Figure()
+            for severity in ["High", "Medium", "Low"]:
+                if severity in df_timeline.columns:
+                    fig_timeline.add_trace(go.Scatter(
+                        x=df_timeline.index,
+                        y=df_timeline[severity],
+                        mode='lines+markers',
+                        name=severity,
+                        line=dict(
+                            width=2,
+                            color="#dc3545" if severity == "High" else "#ffc107" if severity == "Medium" else "#28a745"
+                        )
+                    ))
+            
+            fig_timeline.update_layout(
+                title="Alerts Over Time",
+                xaxis_title="Time",
+                yaxis_title="Number of Alerts",
+                height=350,
+                hovermode='x unified',
+                font=dict(size=12),
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=20, r=20, t=40, b=20),
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+            )
+            st.plotly_chart(fig_timeline, use_container_width=True)
+        else:
+            st.warning("No valid timestamps found for timeline chart")
+    except Exception as e:
+        st.warning(f"Could not generate timeline: {e}")
+
+# Enhanced Alerts Section
+st.markdown("### 🚨 Recent Alerts")
+    st.markdown("---")
     
-    # Alerts table
-    st.markdown("### 🚨 Recent Alerts")
-    
-    # Search box
-    search_term = st.text_input("🔍 Search alerts", placeholder="Search by SUC, event type, or summary...")
+    # Enhanced Search box with better styling
+    search_col1, search_col2 = st.columns([3, 1])
+    with search_col1:
+        search_term = st.text_input(
+            "🔍 Search alerts", 
+            placeholder="Search by SUC, event type, or summary...",
+            help="Enter keywords to filter alerts. Search is case-insensitive."
+        )
+    with search_col2:
+        st.markdown("<br>", unsafe_allow_html=True)  # Spacing
+        if st.button("🔍 Search", use_container_width=True):
+            st.rerun()
     
     if not df.empty:
         if search_term:
@@ -388,54 +434,95 @@ else:
             "summary": "Summary"
         })
         
-        # Show coordinated alerts prominently
+        # Show coordinated alerts prominently with enhanced styling
         if "summary" in df_filtered.columns:
             try:
                 coordinated_alerts = df_filtered[df_filtered["summary"].astype(str).str.contains("Coordinated", case=False, na=False)]
                 if len(coordinated_alerts) > 0:
-                    st.warning(f"⚠️ **{len(coordinated_alerts)} Coordinated Attack(s) Detected!** These require immediate attention.")
+                    st.markdown(
+                        f'<div class="coordinated-alert">'
+                        f'<h4>⚠️ <strong>{len(coordinated_alerts)} Coordinated Attack(s) Detected!</strong></h4>'
+                        f'<p>These alerts indicate coordinated attacks across multiple SUCs and require immediate attention.</p>'
+                        f'</div>',
+                        unsafe_allow_html=True
+                    )
             except:
                 pass
         
-        # Display table with expandable rows
+        # Enhanced table display with better styling
         st.dataframe(
             df_display.head(100),
             use_container_width=True,
             hide_index=True,
-            height=400
+            height=450,
+            column_config={
+                "ID": st.column_config.NumberColumn("ID", format="%d"),
+                "Time": st.column_config.TextColumn("Time"),
+                "SUC": st.column_config.TextColumn("SUC"),
+                "Event Type": st.column_config.TextColumn("Event Type"),
+                "Severity": st.column_config.TextColumn("Severity"),
+                "Anomaly Score": st.column_config.TextColumn("Anomaly Score"),
+                "Summary": st.column_config.TextColumn("Summary", width="large")
+            }
         )
         
-        st.caption(f"Showing {len(df_display)} alert(s). Last updated: {st.session_state.last_update.strftime('%Y-%m-%d %H:%M:%S') if st.session_state.last_update else 'Never'}")
+        # Enhanced footer with better info
+        info_text = f"📊 Showing {len(df_display)} of {len(df_filtered)} alert(s)"
+        if st.session_state.last_update:
+            info_text += f" | Last updated: {st.session_state.last_update.strftime('%Y-%m-%d %H:%M:%S')}"
+        st.info(info_text)
         
-        # Alert details expander
+        # Enhanced Alert details expander with better layout
         if len(df_filtered) > 0:
-            with st.expander("📋 View Alert Details"):
-                selected_idx = st.selectbox("Select alert ID", df_filtered["id"].tolist(), key="alert_selector")
-                if selected_idx:
-                    selected_alert = df_filtered[df_filtered["id"] == selected_idx].iloc[0]
-                    
-                    detail_col1, detail_col2 = st.columns(2)
-                    with detail_col1:
-                        st.write("**Alert ID:**", selected_alert.get("id"))
-                        st.write("**SUC:**", selected_alert.get("suc_id"))
-                        st.write("**Event Type:**", selected_alert.get("event_type"))
-                        st.write("**Severity:**", selected_alert.get("severity"))
-                    
-                    with detail_col2:
-                        st.write("**Timestamp:**", selected_alert.get("timestamp", "N/A"))
-                        score = selected_alert.get('anomaly_score')
-                        if score is not None and pd.notna(score):
-                            try:
-                                st.write("**Anomaly Score:**", f"{float(score):.2f}")
-                            except:
-                                st.write("**Anomaly Score:**", "N/A")
-                        else:
-                            st.write("**Anomaly Score:**", "N/A")
-                        st.write("**Summary:**", selected_alert.get("summary", "N/A"))
-                    
-                    if selected_alert.get("raw_masked"):
-                        st.write("**Anonymized Details:**")
-                        st.json(selected_alert.get("raw_masked", {}))
+            with st.expander("📋 View Detailed Alert Information", expanded=False):
+                alert_ids = df_filtered["id"].tolist()
+                if alert_ids:
+                    selected_idx = st.selectbox(
+                        "Select alert ID to view details", 
+                        alert_ids, 
+                        key="alert_selector",
+                        help="Choose an alert ID to see full details"
+                    )
+                    if selected_idx:
+                        selected_alert = df_filtered[df_filtered["id"] == selected_idx].iloc[0]
+                        
+                        # Enhanced detail display with cards
+                        st.markdown("#### Alert Details")
+                        detail_col1, detail_col2 = st.columns(2)
+                        
+                        with detail_col1:
+                            st.markdown("**Basic Information**")
+                            st.markdown(f"**Alert ID:** `{selected_alert.get('id')}`")
+                            st.markdown(f"**SUC:** `{selected_alert.get('suc_id', 'N/A')}`")
+                            st.markdown(f"**Event Type:** `{selected_alert.get('event_type', 'N/A')}`")
+                            severity = selected_alert.get('severity', 'Unknown')
+                            if severity == "High":
+                                st.markdown(f'**Severity:** <span class="severity-high">🔴 {severity}</span>', unsafe_allow_html=True)
+                            elif severity == "Medium":
+                                st.markdown(f'**Severity:** <span class="severity-medium">🟡 {severity}</span>', unsafe_allow_html=True)
+                            else:
+                                st.markdown(f'**Severity:** <span class="severity-low">🟢 {severity}</span>', unsafe_allow_html=True)
+                        
+                        with detail_col2:
+                            st.markdown("**Timing & Scoring**")
+                            st.markdown(f"**Timestamp:** `{selected_alert.get('timestamp', 'N/A')}`")
+                            score = selected_alert.get('anomaly_score')
+                            if score is not None and pd.notna(score):
+                                try:
+                                    score_val = float(score)
+                                    score_color = "#dc3545" if score_val > 0.7 else "#ff9800" if score_val > 0.5 else "#28a745"
+                                    st.markdown(f'**Anomaly Score:** <span style="color: {score_color}; font-weight: 700;">{score_val:.2f}</span>', unsafe_allow_html=True)
+                                except:
+                                    st.markdown("**Anomaly Score:** N/A")
+                            else:
+                                st.markdown("**Anomaly Score:** N/A")
+                            st.markdown(f"**Summary:** {selected_alert.get('summary', 'N/A')}")
+                        
+                        # Anonymized details in expandable section
+                        if selected_alert.get("raw_masked"):
+                            st.markdown("---")
+                            st.markdown("#### Anonymized Event Details")
+                            st.json(selected_alert.get("raw_masked", {}))
     else:
         st.info("No alerts match the current filters. Adjust filters or wait for new alerts.")
 else:
