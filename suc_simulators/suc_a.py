@@ -1,7 +1,6 @@
 import requests
 import time
 import random
-import uuid
 import sys
 import os
 from datetime import datetime

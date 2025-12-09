@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime
 import sqlite3
-import threading
 import json
 import os
 import sys
@@ -50,8 +49,13 @@ def receive_alert():
             masked["ports_scanned"] = raw["ports_scanned"]
 
         # Validate and sanitize inputs
-        suc_id = str(data["suc_id"])[:50]  # Limit length
-        event_type = str(data.get("event_type", ""))[:50]
+        suc_id = str(data["suc_id"]).strip()
+        if len(suc_id) > 50:
+            return jsonify({"error": "suc_id too long (max 50 characters)"}), 400
+        if not suc_id:
+            return jsonify({"error": "suc_id cannot be empty"}), 400
+        
+        event_type = str(data.get("event_type", "")).strip()[:50]
         timestamp = data.get("timestamp")
         if not timestamp:
             timestamp = datetime.utcnow().isoformat() + "Z"

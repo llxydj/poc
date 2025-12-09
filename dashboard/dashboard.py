@@ -261,32 +261,38 @@ if alerts:
     if "timestamp" in df.columns and len(df) > 0:
         st.markdown("### ⏱️ Alert Timeline")
         try:
-            df["timestamp_parsed"] = pd.to_datetime(df["timestamp"])
-            df_timeline = df.groupby([df["timestamp_parsed"].dt.floor("1min"), "severity"]).size().reset_index(name="count")
-            df_timeline = df_timeline.pivot(index="timestamp_parsed", columns="severity", values="count").fillna(0)
+            df["timestamp_parsed"] = pd.to_datetime(df["timestamp"], errors='coerce')
+            # Remove rows with invalid timestamps
+            df_valid = df[df["timestamp_parsed"].notna()]
             
-            fig_timeline = go.Figure()
-            for severity in ["High", "Medium", "Low"]:
-                if severity in df_timeline.columns:
-                    fig_timeline.add_trace(go.Scatter(
-                        x=df_timeline.index,
-                        y=df_timeline[severity],
-                        mode='lines+markers',
-                        name=severity,
-                        line=dict(
-                            width=2,
-                            color="#dc3545" if severity == "High" else "#ffc107" if severity == "Medium" else "#28a745"
-                        )
-                    ))
-            
-            fig_timeline.update_layout(
-                title="Alerts Over Time",
-                xaxis_title="Time",
-                yaxis_title="Number of Alerts",
-                height=300,
-                hovermode='x unified'
-            )
-            st.plotly_chart(fig_timeline, use_container_width=True)
+            if len(df_valid) > 0:
+                df_timeline = df_valid.groupby([df_valid["timestamp_parsed"].dt.floor("1min"), "severity"]).size().reset_index(name="count")
+                df_timeline = df_timeline.pivot(index="timestamp_parsed", columns="severity", values="count").fillna(0)
+                
+                fig_timeline = go.Figure()
+                for severity in ["High", "Medium", "Low"]:
+                    if severity in df_timeline.columns:
+                        fig_timeline.add_trace(go.Scatter(
+                            x=df_timeline.index,
+                            y=df_timeline[severity],
+                            mode='lines+markers',
+                            name=severity,
+                            line=dict(
+                                width=2,
+                                color="#dc3545" if severity == "High" else "#ffc107" if severity == "Medium" else "#28a745"
+                            )
+                        ))
+                
+                fig_timeline.update_layout(
+                    title="Alerts Over Time",
+                    xaxis_title="Time",
+                    yaxis_title="Number of Alerts",
+                    height=300,
+                    hovermode='x unified'
+                )
+                st.plotly_chart(fig_timeline, use_container_width=True)
+            else:
+                st.warning("No valid timestamps found for timeline chart")
         except Exception as e:
             st.warning(f"Could not generate timeline: {e}")
     

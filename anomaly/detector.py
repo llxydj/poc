@@ -3,7 +3,12 @@ from sklearn.ensemble import IsolationForest
 import joblib
 import os
 
-MODEL_FILE = os.environ.get("BAYANI_MODEL", "if_model.joblib")
+# Get the directory where this script is located
+_MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Default to project root (parent of anomaly directory)
+_PROJECT_ROOT = os.path.dirname(_MODULE_DIR)
+# Use absolute path for model file
+MODEL_FILE = os.environ.get("BAYANI_MODEL", os.path.join(_PROJECT_ROOT, "if_model.joblib"))
 
 def train_sample_model():
     # sample training synthetic data: normal operations
