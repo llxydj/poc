@@ -1,0 +1,52 @@
+# Files to ignore during Render deployment
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Documentation (optional - you can include these)
+*.md
+!README.md
+
+# Test files (optional)
+test_*.py
+qa_*.py
+
+# Model file (will be regenerated)
+if_model.joblib
+
+# Database (will be created on first run)
+hub/bayanihub.db
+
+# Audit reports
+*_AUDIT*.md
+*_REPORT*.md
+COMPLETE_CHECKLIST.md
+VERIFICATION_CHECKLIST.md
+
+# Setup scripts
+verify_setup.py
+start_*.bat
+start_*.sh
+
+# Executables
+*.exe
+

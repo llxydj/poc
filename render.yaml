@@ -1,0 +1,29 @@
+# Render.com Deployment Configuration
+# This file makes deployment easier - you can also use the web UI
+
+services:
+  # Hub API Service
+  - type: web
+    name: bayanihub-hub
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd hub && python app.py
+    envVars:
+      - key: BAYANI_DB
+        value: hub/bayanihub.db
+      - key: PORT
+        value: 5000
+    healthCheckPath: /health
+
+  # Dashboard Service
+  - type: web
+    name: bayanihub-dashboard
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run dashboard/dashboard.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
+    envVars:
+      - key: HUB_URL
+        value: https://bayanihub-hub.onrender.com/alerts
+      - key: PORT
+        value: 8501
+

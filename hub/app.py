@@ -174,7 +174,11 @@ def hash_username(u):
         return "0"
 
 if __name__ == "__main__":
-    print(f"[HUB] Starting BAYANIHUB Hub on http://0.0.0.0:5000")
+    # Get port from environment variable (for Render, Heroku, etc.) or default to 5000
+    port = int(os.environ.get("PORT", 5000))
+    print(f"[HUB] Starting BAYANIHUB Hub on http://0.0.0.0:{port}")
     print(f"[HUB] Database: {DB_PATH}")
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    # Disable debug mode in production
+    debug_mode = os.environ.get("FLASK_DEBUG", "False").lower() == "true"
+    app.run(host="0.0.0.0", port=port, debug=debug_mode)
 

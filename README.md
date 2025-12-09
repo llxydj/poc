@@ -984,6 +984,30 @@ This ensures clean shutdown and data persistence.
 
 ---
 
+## 🌐 Deployment
+
+### FREE Deployment Option: Render.com
+
+This project can be deployed for **FREE** on Render.com!
+
+**Quick Deploy:**
+1. Push code to GitHub
+2. Sign up at render.com (free)
+3. Deploy Hub API and Dashboard
+4. Run SUC simulators locally pointing to deployed hub
+
+**See `DEPLOYMENT_STEPS.md` for complete step-by-step guide.**
+
+**Why Render:**
+- ✅ 100% FREE tier (no credit card needed)
+- ✅ Supports Flask and Streamlit
+- ✅ Easy GitHub integration
+- ✅ Auto-deploy on push
+
+**Cost: $0/month** (or $7/month if you want PostgreSQL after 90 days)
+
+---
+
 ## 📄 License
 
 This is a proof-of-concept for educational/demonstration purposes.
