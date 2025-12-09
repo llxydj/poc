@@ -18,54 +18,262 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for better styling
+# Enhanced Professional CSS for Modern UI/UX
 st.markdown("""
 <style>
+    /* Main Header - Professional Gradient */
     .main-header {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #1f77b4;
+        font-size: 3rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #1f77b4 0%, #2c5aa0 50%, #1a4d8c 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
         margin-bottom: 0.5rem;
+        text-align: center;
+        letter-spacing: -0.5px;
     }
+    
+    /* Sub Header */
     .sub-header {
-        font-size: 1.1rem;
-        color: #666;
+        font-size: 1.2rem;
+        color: #555;
         margin-bottom: 2rem;
+        font-style: italic;
+        text-align: center;
     }
+    
+    /* Metric Cards - Professional Design */
     .metric-card {
-        background-color: #f0f2f6;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        border-left: 4px solid #1f77b4;
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        padding: 1.5rem;
+        border-radius: 12px;
+        border-left: 5px solid #1f77b4;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        margin-bottom: 1rem;
     }
+    
+    .metric-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+    
+    /* Severity Badges - Enhanced */
     .severity-high {
-        color: #dc3545;
-        font-weight: 600;
+        color: #ffffff;
+        font-weight: 700;
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        padding: 6px 12px;
+        border-radius: 20px;
+        display: inline-block;
+        box-shadow: 0 2px 4px rgba(220,53,69,0.3);
     }
+    
     .severity-medium {
-        color: #ffc107;
-        font-weight: 600;
+        color: #ffffff;
+        font-weight: 700;
+        background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        padding: 6px 12px;
+        border-radius: 20px;
+        display: inline-block;
+        box-shadow: 0 2px 4px rgba(255,152,0,0.3);
     }
+    
     .severity-low {
-        color: #28a745;
-        font-weight: 600;
+        color: #ffffff;
+        font-weight: 700;
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        padding: 6px 12px;
+        border-radius: 20px;
+        display: inline-block;
+        box-shadow: 0 2px 4px rgba(40,167,69,0.3);
     }
+    
+    /* Status Indicators - Professional */
     .status-online {
-        color: #28a745;
-        font-weight: 600;
+        color: #ffffff;
+        font-weight: 700;
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        padding: 8px 16px;
+        border-radius: 25px;
+        display: inline-block;
+        font-size: 0.95rem;
+        box-shadow: 0 2px 6px rgba(40,167,69,0.3);
+        animation: pulse-green 2s infinite;
     }
+    
+    @keyframes pulse-green {
+        0%, 100% { box-shadow: 0 2px 6px rgba(40,167,69,0.3); }
+        50% { box-shadow: 0 2px 12px rgba(40,167,69,0.6); }
+    }
+    
     .status-offline {
-        color: #dc3545;
-        font-weight: 600;
+        color: #ffffff;
+        font-weight: 700;
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        padding: 8px 16px;
+        border-radius: 25px;
+        display: inline-block;
+        font-size: 0.95rem;
+        box-shadow: 0 2px 6px rgba(220,53,69,0.3);
     }
-    .stAlert {
-        padding: 1rem;
-    }
+    
+    /* Coordinated Alert - Enhanced Warning */
     .coordinated-alert {
-        background-color: #fff3cd;
-        border-left: 4px solid #ffc107;
-        padding: 0.5rem;
-        margin: 0.5rem 0;
+        background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%);
+        border-left: 6px solid #ff9800;
+        padding: 1.2rem;
+        margin: 1.5rem 0;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(255,152,0,0.25);
+        animation: pulse-warning 3s infinite;
+    }
+    
+    @keyframes pulse-warning {
+        0%, 100% { border-left-width: 6px; }
+        50% { border-left-width: 8px; }
+    }
+    
+    /* Button Enhancements */
+    .stButton>button {
+        border-radius: 10px;
+        border: none;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    .stButton>button[kind="primary"] {
+        background: linear-gradient(135deg, #1f77b4 0%, #2c5aa0 100%);
+        color: white;
+    }
+    
+    /* Table Enhancements */
+    .dataframe {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border: 1px solid #e0e0e0;
+    }
+    
+    /* Chart Container */
+    .plotly {
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        background: white;
+        padding: 10px;
+    }
+    
+    /* Section Headers */
+    h3 {
+        color: #2c5aa0;
+        font-weight: 700;
+        margin-top: 2.5rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.8rem;
+        border-bottom: 3px solid #e0e0e0;
+        font-size: 1.5rem;
+    }
+    
+    /* Info/Warning/Error Boxes */
+    .stInfo {
+        border-radius: 10px;
+        border-left: 5px solid #1f77b4;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    
+    .stWarning {
+        border-radius: 10px;
+        border-left: 5px solid #ff9800;
+        box-shadow: 0 2px 6px rgba(255,152,0,0.2);
+    }
+    
+    .stError {
+        border-radius: 10px;
+        border-left: 5px solid #dc3545;
+        box-shadow: 0 2px 6px rgba(220,53,69,0.2);
+    }
+    
+    .stSuccess {
+        border-radius: 10px;
+        border-left: 5px solid #28a745;
+        box-shadow: 0 2px 6px rgba(40,167,69,0.2);
+    }
+    
+    /* Sidebar Enhancements */
+    .sidebar .sidebar-content {
+        background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+    }
+    
+    /* Input Fields */
+    .stTextInput>div>div>input {
+        border-radius: 8px;
+        border: 2px solid #e0e0e0;
+        transition: all 0.3s;
+    }
+    
+    .stTextInput>div>div>input:focus {
+        border-color: #1f77b4;
+        box-shadow: 0 0 0 3px rgba(31,119,180,0.1);
+    }
+    
+    /* Select Boxes */
+    .stSelectbox>div>div>select {
+        border-radius: 8px;
+    }
+    
+    /* Multiselect */
+    .stMultiSelect>div>div {
+        border-radius: 8px;
+    }
+    
+    /* Footer */
+    footer {
+        visibility: hidden;
+    }
+    
+    /* Hide Streamlit Menu */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 5px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #1f77b4 0%, #2c5aa0 100%);
+        border-radius: 5px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, #2c5aa0 0%, #1a4d8c 100%);
+    }
+    
+    /* Card-like containers */
+    .stMetric {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    /* Better spacing */
+    .element-container {
+        margin-bottom: 1.5rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -76,21 +284,23 @@ if 'last_update' not in st.session_state:
 if 'alert_count' not in st.session_state:
     st.session_state.alert_count = 0
 
-# Sidebar
+# Enhanced Sidebar with Professional Design
 with st.sidebar:
     st.markdown("## 🎛️ Control Panel")
+    st.markdown("---")
     
-    # Connection status
+    # Connection status with enhanced display
+    st.markdown("### 🔌 Connection Status")
     try:
         health_check = requests.get(f"{HUB_BASE}/health", timeout=1)
         if health_check.status_code == 200:
-            st.markdown('<p class="status-online">🟢 Hub: Online</p>', unsafe_allow_html=True)
+            st.markdown('<div style="text-align: center;"><p class="status-online">🟢 Hub: Online</p></div>', unsafe_allow_html=True)
             hub_status = "online"
         else:
-            st.markdown('<p class="status-offline">🔴 Hub: Offline</p>', unsafe_allow_html=True)
+            st.markdown('<div style="text-align: center;"><p class="status-offline">🔴 Hub: Offline</p></div>', unsafe_allow_html=True)
             hub_status = "offline"
     except:
-        st.markdown('<p class="status-offline">🔴 Hub: Offline</p>', unsafe_allow_html=True)
+        st.markdown('<div style="text-align: center;"><p class="status-offline">🔴 Hub: Offline</p></div>', unsafe_allow_html=True)
         hub_status = "offline"
     
     st.markdown("---")
@@ -130,29 +340,61 @@ with st.sidebar:
     
     st.markdown("---")
     
-    # Statistics
-    st.markdown("### 📊 Quick Stats")
+    # Enhanced Statistics Section
+    st.markdown("### 📊 Quick Statistics")
     try:
         metrics = requests.get(f"{HUB_BASE}/metrics", timeout=2).json()
-        st.metric("Total Alerts", metrics.get("total_alerts", 0))
-        st.metric("High Severity", metrics.get("by_severity", {}).get("high", 0))
+        total = metrics.get("total_alerts", 0)
+        high = metrics.get("by_severity", {}).get("high", 0)
+        
+        st.metric("📊 Total Alerts", total, help="Total number of alerts received")
+        st.metric("🔴 High Severity", high, help="Number of high-severity alerts")
+        
+        # Show coordinated attacks if any
+        coordinated = metrics.get("coordinated_attacks", 0)
+        if coordinated > 0:
+            st.warning(f"⚠️ {coordinated} Coordinated Attack(s)")
     except:
-        st.info("Connect to hub to see stats")
+        st.info("ℹ️ Connect to hub to see statistics")
     
     st.markdown("---")
+    
+    # Enhanced About Section
     st.markdown("### ℹ️ About")
-    st.caption("BAYANIHUB POC Dashboard")
-    st.caption("Real-time security alert monitoring")
+    st.markdown("""
+    **BAYANIHUB POC Dashboard**
+    
+    Real-time security alert monitoring and correlation system for State Universities and Colleges.
+    
+    **Features:**
+    - Real-time alert visualization
+    - ML-based anomaly detection
+    - Coordinated attack detection
+    - Privacy-preserving data sharing
+    """)
+    
+    st.markdown("---")
+    st.caption("🛡️ BAYANIHUB POC v1.0")
 
-# Main content area
-st.markdown('<h1 class="main-header">🛡️ BAYANIHUB Security Dashboard</h1>', unsafe_allow_html=True)
-st.markdown('<p class="sub-header">Real-time security alert monitoring and correlation across State Universities and Colleges</p>', unsafe_allow_html=True)
+# Enhanced Main Header Section
+header_col1, header_col2, header_col3 = st.columns([1, 2, 1])
+with header_col2:
+    st.markdown('<h1 class="main-header">🛡️ BAYANIHUB Security Dashboard</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="sub-header">Real-time security alert monitoring and correlation across State Universities and Colleges</p>', unsafe_allow_html=True)
 
-# Manual refresh button at top (better UX)
-refresh_col1, refresh_col2, refresh_col3 = st.columns([2, 1, 2])
-with refresh_col2:
-    if st.button("🔄 Refresh Data Now", use_container_width=True, type="primary", key="top_refresh"):
-        st.rerun()
+# Enhanced Refresh Section with Status
+refresh_section = st.container()
+with refresh_section:
+    refresh_col1, refresh_col2, refresh_col3, refresh_col4 = st.columns([1, 1.5, 1.5, 1])
+    with refresh_col2:
+        if st.button("🔄 Refresh Data Now", use_container_width=True, type="primary", key="top_refresh", help="Click to manually refresh all data from the hub"):
+            st.rerun()
+    with refresh_col3:
+        if st.session_state.last_update:
+            last_update_str = st.session_state.last_update.strftime('%H:%M:%S')
+            st.caption(f"⏰ Last updated: {last_update_str}")
+        else:
+            st.caption("⏰ Waiting for data...")
 
 st.markdown("---")
 
@@ -206,31 +448,32 @@ else:
     suc_a_count = sum(1 for a in alerts if a.get("suc_id") == "SUC_A")
     suc_b_count = sum(1 for a in alerts if a.get("suc_id") == "SUC_B")
 
+# Enhanced Metric Cards with Professional Styling
 with metric_col1:
-    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-    st.metric("📊 Total Alerts", total, delta=None)
+    st.markdown('<div style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); padding: 1.5rem; border-radius: 12px; border-left: 5px solid #1f77b4; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">', unsafe_allow_html=True)
+    st.metric("📊 Total Alerts", f"{total:,}", delta=None, help="Total number of alerts in the system")
     st.markdown('</div>', unsafe_allow_html=True)
 
 with metric_col2:
-    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+    st.markdown('<div style="background: linear-gradient(135deg, #ffffff 0%, #ffe6e6 100%); padding: 1.5rem; border-radius: 12px; border-left: 5px solid #dc3545; box-shadow: 0 2px 8px rgba(220,53,69,0.15);">', unsafe_allow_html=True)
     delta_high = None
-    st.metric("🔴 High Severity", high, delta=delta_high, delta_color="inverse")
+    st.metric("🔴 High Severity", f"{high:,}", delta=delta_high, delta_color="inverse", help="Number of high-severity alerts requiring immediate attention")
     st.markdown('</div>', unsafe_allow_html=True)
 
 with metric_col3:
-    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-    st.metric("🟡 Medium Severity", medium, delta=None)
+    st.markdown('<div style="background: linear-gradient(135deg, #ffffff 0%, #fff3e0 100%); padding: 1.5rem; border-radius: 12px; border-left: 5px solid #ff9800; box-shadow: 0 2px 8px rgba(255,152,0,0.15);">', unsafe_allow_html=True)
+    st.metric("🟡 Medium Severity", f"{medium:,}", delta=None, help="Number of medium-severity alerts")
     st.markdown('</div>', unsafe_allow_html=True)
 
 with metric_col4:
-    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-    st.metric("🟢 Low Severity", low, delta=None)
+    st.markdown('<div style="background: linear-gradient(135deg, #ffffff 0%, #e8f5e9 100%); padding: 1.5rem; border-radius: 12px; border-left: 5px solid #28a745; box-shadow: 0 2px 8px rgba(40,167,69,0.15);">', unsafe_allow_html=True)
+    st.metric("🟢 Low Severity", f"{low:,}", delta=None, help="Number of low-severity alerts")
     st.markdown('</div>', unsafe_allow_html=True)
 
 with metric_col5:
-    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+    st.markdown('<div style="background: linear-gradient(135deg, #ffffff 0%, #e3f2fd 100%); padding: 1.5rem; border-radius: 12px; border-left: 5px solid #2196f3; box-shadow: 0 2px 8px rgba(33,150,243,0.15);">', unsafe_allow_html=True)
     active_sucs = suc_a_count + suc_b_count
-    st.metric("🏫 Active SUCs", active_sucs, delta=None)
+    st.metric("🏫 Active SUCs", active_sucs, delta=None, help="Number of State Universities and Colleges sending alerts")
     st.markdown('</div>', unsafe_allow_html=True)
 
 # Enhanced Visualizations Section
@@ -266,16 +509,16 @@ else:
 with viz_col1:
     if not df.empty and "severity" in df.columns and len(df) > 0:
         severity_counts = df["severity"].value_counts()
-            fig_pie = px.pie(
-                values=severity_counts.values,
-                names=severity_counts.index,
-                title="Alerts by Severity",
-                color_discrete_map={
-                    "High": "#dc3545",
-                    "Medium": "#ffc107",
-                    "Low": "#28a745"
-                }
-            )
+        fig_pie = px.pie(
+            values=severity_counts.values,
+            names=severity_counts.index,
+            title="Alerts by Severity",
+            color_discrete_map={
+                "High": "#dc3545",
+                "Medium": "#ffc107",
+                "Low": "#28a745"
+            }
+        )
         fig_pie.update_layout(
             showlegend=True, 
             height=380,
@@ -290,27 +533,27 @@ with viz_col1:
 
 # SUC distribution bar chart
 with viz_col2:
-        if not df.empty and "suc_id" in df.columns and len(df) > 0:
-            suc_counts = df["suc_id"].value_counts()
-            fig_bar = px.bar(
-                x=suc_counts.index,
-                y=suc_counts.values,
-                title="Alerts by SUC",
-                labels={"x": "SUC", "y": "Count"},
-                color=suc_counts.values,
-                color_continuous_scale="Blues"
-            )
-            fig_bar.update_layout(
-                showlegend=False, 
-                height=380,
-                font=dict(size=12),
-                paper_bgcolor='rgba(0,0,0,0)',
-                plot_bgcolor='rgba(0,0,0,0)',
-                margin=dict(l=20, r=20, t=40, b=20)
-            )
-            st.plotly_chart(fig_bar, use_container_width=True)
-        else:
-            st.info("📊 No SUC data available to display")
+    if not df.empty and "suc_id" in df.columns and len(df) > 0:
+        suc_counts = df["suc_id"].value_counts()
+        fig_bar = px.bar(
+            x=suc_counts.index,
+            y=suc_counts.values,
+            title="Alerts by SUC",
+            labels={"x": "SUC", "y": "Count"},
+            color=suc_counts.values,
+            color_continuous_scale="Blues"
+        )
+        fig_bar.update_layout(
+            showlegend=False, 
+            height=380,
+            font=dict(size=12),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=40, b=20)
+        )
+        st.plotly_chart(fig_bar, use_container_width=True)
+    else:
+        st.info("📊 No SUC data available to display")
     
 # Timeline chart
 if not df.empty and "timestamp" in df.columns and len(df) > 0:
@@ -360,17 +603,23 @@ if not df.empty and "timestamp" in df.columns and len(df) > 0:
 st.markdown("### 🚨 Recent Alerts")
     st.markdown("---")
     
-    # Enhanced Search box with better styling
-    search_col1, search_col2 = st.columns([3, 1])
+    # Enhanced Search Section with Professional Design
+    st.markdown("#### 🔍 Search & Filter Alerts")
+    search_col1, search_col2, search_col3 = st.columns([4, 1, 1])
     with search_col1:
         search_term = st.text_input(
             "🔍 Search alerts", 
-            placeholder="Search by SUC, event type, or summary...",
-            help="Enter keywords to filter alerts. Search is case-insensitive."
+            placeholder="Type to search by SUC, event type, or summary...",
+            help="Enter keywords to filter alerts. Search is case-insensitive and searches across multiple fields.",
+            label_visibility="collapsed"
         )
     with search_col2:
         st.markdown("<br>", unsafe_allow_html=True)  # Spacing
-        if st.button("🔍 Search", use_container_width=True):
+        if st.button("🔍 Search", use_container_width=True, type="secondary"):
+            st.rerun()
+    with search_col3:
+        st.markdown("<br>", unsafe_allow_html=True)  # Spacing
+        if st.button("🔄 Clear", use_container_width=True, help="Clear search and filters"):
             st.rerun()
     
     if not df.empty:
@@ -449,20 +698,21 @@ st.markdown("### 🚨 Recent Alerts")
             except:
                 pass
         
-        # Enhanced table display with better styling
+        # Enhanced table display with professional styling
+        st.markdown("#### 📋 Alert Details Table")
         st.dataframe(
             df_display.head(100),
             use_container_width=True,
             hide_index=True,
-            height=450,
+            height=500,
             column_config={
-                "ID": st.column_config.NumberColumn("ID", format="%d"),
-                "Time": st.column_config.TextColumn("Time"),
-                "SUC": st.column_config.TextColumn("SUC"),
-                "Event Type": st.column_config.TextColumn("Event Type"),
-                "Severity": st.column_config.TextColumn("Severity"),
-                "Anomaly Score": st.column_config.TextColumn("Anomaly Score"),
-                "Summary": st.column_config.TextColumn("Summary", width="large")
+                "ID": st.column_config.NumberColumn("ID", format="%d", help="Unique alert identifier"),
+                "Time": st.column_config.TextColumn("Time", help="Alert timestamp"),
+                "SUC": st.column_config.TextColumn("SUC", help="State University/College identifier"),
+                "Event Type": st.column_config.TextColumn("Event Type", help="Type of security event"),
+                "Severity": st.column_config.TextColumn("Severity", help="Alert severity level"),
+                "Anomaly Score": st.column_config.TextColumn("Anomaly Score", help="ML anomaly detection score (0-1)"),
+                "Summary": st.column_config.TextColumn("Summary", width="large", help="Alert summary and correlation details")
             }
         )
         
@@ -521,41 +771,61 @@ st.markdown("### 🚨 Recent Alerts")
                         # Anonymized details in expandable section
                         if selected_alert.get("raw_masked"):
                             st.markdown("---")
-                            st.markdown("#### Anonymized Event Details")
+                            st.markdown("#### 🔒 Anonymized Event Details")
+                            st.markdown("*Privacy-protected data (IPs and usernames anonymized)*")
                             st.json(selected_alert.get("raw_masked", {}))
     else:
-        st.info("No alerts match the current filters. Adjust filters or wait for new alerts.")
+        st.warning("⚠️ No alerts match the current filters. Try adjusting your filters or wait for new alerts.")
 else:
-    # Empty state
-    st.info("""
-    ### 📡 No alerts received yet
-    
-    To start seeing alerts:
-    1. Make sure the hub is running: `cd hub && python app.py`
-    2. Start SUC simulators: `python suc_simulators/suc_a.py` and `python suc_simulators/suc_b.py`
-    3. Wait a few seconds for alerts to appear
-    
-    Check the connection status in the sidebar.
-    """)
+    # Enhanced Empty State with Professional Design
+    empty_col1, empty_col2, empty_col3 = st.columns([1, 2, 1])
+    with empty_col2:
+        st.markdown("""
+        <div style="text-align: center; padding: 3rem; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            <h2 style="color: #2c5aa0; margin-bottom: 1rem;">📡 No Alerts Received Yet</h2>
+            <p style="color: #555; font-size: 1.1rem; margin-bottom: 2rem;">The dashboard is ready and waiting for alerts from the hub.</p>
+            <div style="text-align: left; background: white; padding: 1.5rem; border-radius: 10px; margin-top: 1rem;">
+                <h4 style="color: #2c5aa0; margin-bottom: 1rem;">🚀 Getting Started:</h4>
+                <ol style="color: #555; line-height: 2;">
+                    <li><strong>Start the Hub:</strong> <code>cd hub && python app.py</code></li>
+                    <li><strong>Start SUC Simulators:</strong> <code>python suc_simulators/suc_a.py</code> and <code>python suc_simulators/suc_b.py</code></li>
+                    <li><strong>Wait a few seconds</strong> for alerts to appear</li>
+                </ol>
+                <p style="color: #666; margin-top: 1rem; font-style: italic;">Check the connection status in the sidebar to verify hub connectivity.</p>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
-# Footer
+# Enhanced Footer Section
 st.markdown("---")
-footer_col1, footer_col2, footer_col3 = st.columns(3)
-with footer_col1:
-    st.caption("🛡️ BAYANIHUB POC")
-with footer_col2:
-    if st.session_state.last_update:
-        st.caption(f"Last update: {st.session_state.last_update.strftime('%H:%M:%S')}")
-    else:
-        st.caption("Waiting for data...")
-with footer_col3:
-    st.caption(f"Total alerts: {st.session_state.alert_count}")
+footer_container = st.container()
+with footer_container:
+    footer_col1, footer_col2, footer_col3, footer_col4 = st.columns(4)
+    with footer_col1:
+        st.markdown("**🛡️ BAYANIHUB POC**")
+        st.caption("Security Alert System")
+    with footer_col2:
+        if st.session_state.last_update:
+            st.markdown("**⏰ Last Update**")
+            st.caption(st.session_state.last_update.strftime('%Y-%m-%d %H:%M:%S'))
+        else:
+            st.markdown("**⏰ Status**")
+            st.caption("Waiting for data...")
+    with footer_col3:
+        st.markdown("**📊 Alert Count**")
+        st.caption(f"{st.session_state.alert_count:,} alerts")
+    with footer_col4:
+        st.markdown("**🔌 Connection**")
+        if hub_status == "online":
+            st.caption("🟢 Online")
+        else:
+            st.caption("🔴 Offline")
 
-# Bottom refresh button (duplicate for convenience)
+# Bottom refresh section
 st.markdown("---")
 refresh_bottom_col1, refresh_bottom_col2, refresh_bottom_col3 = st.columns([2, 1, 2])
 with refresh_bottom_col2:
-    if st.button("🔄 Refresh Data", use_container_width=True, type="secondary", key="bottom_refresh"):
+    if st.button("🔄 Refresh Data", use_container_width=True, type="primary", key="bottom_refresh", help="Refresh all data from the hub"):
         st.rerun()
 
 # Auto-refresh logic - Only runs if enabled (may cause page reload)
